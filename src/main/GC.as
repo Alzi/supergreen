@@ -2,12 +2,12 @@ package main
 {
 	/**
 	 * ...
-	 * @author Alzheimer
+	 * @author marc
 	 */
 	public class GC 
 	{
-		public static const SCREEN_WIDTH:Number = 32 * 18;
-		public static const SCREEN_HEIGHT:Number = 32 * 20;
+		public static const SCREEN_WIDTH:Number = 480;
+		public static const SCREEN_HEIGHT:Number = 640;
 	}
 
 }

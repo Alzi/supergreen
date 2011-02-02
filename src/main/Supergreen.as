@@ -5,7 +5,7 @@ package main
 	
 	/**
 	 * ...
-	 * @author Alzi
+	 * @author marc
 	 */
 	public class Supergreen extends Engine
 	{

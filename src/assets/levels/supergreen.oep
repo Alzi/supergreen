@@ -1,0 +1,26 @@
+<project>
+	<name>Supergreen</name>
+	<settings>
+		<defaultWidth>640</defaultWidth>
+		<defaultHeight>480</defaultHeight>
+		<workingDirectory>../gfx</workingDirectory>
+	</settings>
+	<tilesets>
+		<tileset name="walls" image="level-tiles.png" tileWidth="32" tileHeight="32" />
+		<tileset name="goodies" image="goodies.png" tileWidth="32" tileHeight="32" />
+		<tileset name="player" image="player.png" tileWidth="32" tileHeight="32" />
+		<tileset name="enemies" image="enemies.png" tileWidth="32" tileHeight="32" />
+		
+	</tilesets>
+	
+	
+	<layers>
+		<grid name="movable" gridSize="32" />
+		<grid name="ghostsHome" gridSize="32" exportAsObjects="true" />
+		<tiles name="walls" gridSize="32" />
+		<tiles name="goodies" gridSize="32" />
+		<tiles name="player" gridSize="32" />
+		<tiles name="enemies" gridSize="32" />
+	</layers>
+	
+</project>
