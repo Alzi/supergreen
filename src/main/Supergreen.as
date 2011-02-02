@@ -2,6 +2,8 @@ package main
 {
 	import net.flashpunk.Engine;
 	import main.GC;
+	import net.flashpunk.FP;
+	import worlds.level1;
 	
 	/**
 	 * ...
@@ -13,6 +15,7 @@ package main
 		public function Supergreen():void 
 		{
 			super(GC.SCREEN_WIDTH, GC.SCREEN_HEIGHT);
+			FP.world = new level1;
 		}
 		
 		override public function init():void 

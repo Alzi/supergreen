@@ -1,6 +1,7 @@
 package worlds 
 {
 	import net.flashpunk.World;
+	import players.Player;
 	
 	/**
 	 * ...
@@ -11,7 +12,7 @@ package worlds
 		
 		public function level1() 
 		{
-			
+			add(new Player);
 		}
 		
 	}
