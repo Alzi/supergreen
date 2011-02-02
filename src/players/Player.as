@@ -16,15 +16,18 @@ package players
 	{
 		[Embed(source = '../assets/gfx/player.png')]
 		private const PLAYER:Class;
-		private var player_sprite:Image;
-		private var direction:Number;
+		private var player_sprite:Spritemap = new Spritemap(PLAYER, 32, 32);
+		private var direction:Number = 1; //Default-Direction = left
 		
 		public function Player() 
 		{
-			//FIXME maskierung ändern, (tileSet benutzen)
-			player_sprite = new Image(PLAYER, new Rectangle(0, 0, 32, 32));
-			graphic = player_sprite;
+			player_sprite.add("left", [0,1,2,1], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("right", [4,5,6,5], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("up", [8,9,10,9], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("down", [12,13,14,13], GC.PLAYER_SPRITE_FR, true);
 			
+			graphic = player_sprite;
+						
 			//define Inputs
 			Input.define("left", Key.LEFT, Key.A);
 			Input.define("right", Key.RIGHT, Key.D);
@@ -40,15 +43,19 @@ package players
 			//check Input
 			if (Input.pressed("left")) {
 				this.direction = 1;
+				player_sprite.play("left");
 			}
 			if (Input.pressed("right")) {
 				this.direction = 2;
+				player_sprite.play("right");
 			}
 			if (Input.pressed("up")) {
 				this.direction = 3;
+				player_sprite.play("up");
 			}
 			if (Input.pressed("down")) {
 				this.direction = 4;
+				player_sprite.play("down");
 			}
 			
 			//move character
