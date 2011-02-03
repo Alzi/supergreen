@@ -19,7 +19,7 @@ package levels
 		public function Level(xml:Class) 
 		{
 			
-			layer = 1;
+			layer = 2;
 			type = "blocked";
 			mask = _blockedGrid;
 			graphic = _roomTiles;
@@ -45,14 +45,18 @@ package levels
 			var xmlData:XML = new XML(byteString);
 			var dataElement:XML;
 			var dataList:XMLList = new XMLList();
-			dataList = xmlData.blocked.rect;
+			dataList = xmlData.walls.tile;
 			
+			trace (dataList);
 			
 			for each (dataElement in dataList) {
-				_roomTiles.setRect(dataElement.@x / 32, dataElement.@y / 32, dataElement.@w / 32, dataElement.@h / 32);
-				_blockedGrid.setRect(dataElement.@x / 32, dataElement.@y / 32, dataElement.@w / 32, dataElement.@h / 32);
+				_roomTiles.setTile(dataElement.@x / 32, dataElement.@y / 32, dataElement.@tx/32 + 6*(dataElement.@ty / 32));
 			}
 			
+			dataList = xmlData.blocked.rect;
+			for each (dataElement in dataList) {
+				_blockedGrid.setRect(dataElement.@x / 32, dataElement.@y / 32, dataElement.@w / 32, dataElement.@h / 32, true);
+			}
 		}
 		
 		

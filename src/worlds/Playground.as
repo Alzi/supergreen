@@ -1,5 +1,6 @@
 package worlds 
 {
+	import main.Background;
 	import net.flashpunk.World;
 	import levels.Level;
 	import players.Player;
@@ -17,8 +18,10 @@ package worlds
 		
 		public function Playground() 
 		{
-			add(new Player);
+			
 			add(new Level(TESTLEVEL));
+			add(new Player);
+			add(new Background);
 		}
 		
 	}

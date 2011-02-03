@@ -23,8 +23,8 @@ package main
 		{
 			trace("I'm here!");
 			super.init();
-			FP.console.toggleKey = 111;
-			FP.console.enable();
+			//FP.console.toggleKey = 111;
+			//FP.console.enable();
 		}
 		
 	}

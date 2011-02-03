@@ -27,6 +27,7 @@ package players
 		
 		public function Player() 
 		{
+			layer = 3;
 			player_sprite.add("right", [0,1,2,3,1], GC.PLAYER_SPRITE_FR, true);
 			player_sprite.add("left", [4,5,6,7,5], GC.PLAYER_SPRITE_FR, true);
 			player_sprite.add("up", [8,9,10,11,9], GC.PLAYER_SPRITE_FR, true);
