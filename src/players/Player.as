@@ -17,7 +17,10 @@ package players
 		[Embed(source = '../assets/gfx/player.png')]
 		private const PLAYER:Class;
 		private var player_sprite:Spritemap = new Spritemap(PLAYER, 32, 32);
-		private var direction:Number = 0; //Default-Direction = left
+		private var currentVelX:int = 0;  	//Default-X-Velocity
+		private var currentVelY:int = 0;	//Default-X-Velocity
+		private var nextVelX:int = 0;		
+		private var nextVelY:int = 0;		
 		
 		public function Player() 
 		{
@@ -35,64 +38,64 @@ package players
 			Input.define("down", Key.DOWN, Key.S);
 			
 			//define Hitbox
-			setHitbox(32, 32, 0,0);
+			setHitbox(32, 32, 0, 0);
 					
 			// set Player to Coordinates (x,y)
-			super(60, 40);
+			// TODO get PlayerStart from LevelData
+			super(32, 32);
 		}
 		
 		override public function update():void 
 		{
 			//check Input
 			if (Input.pressed("left")) {
-				this.direction = 1;
-				player_sprite.play("left");
+				nextVelX = -GC.PLAYER_SPEED;
+				nextVelY = 0;
+				//player_sprite.play("left");
 			}
 			if (Input.pressed("right")) {
-				this.direction = 2;
-				player_sprite.play("right");
+				nextVelX = GC.PLAYER_SPEED;
+				nextVelY = 0;
+				//player_sprite.play("right");
 			}
 			if (Input.pressed("up")) {
-				this.direction = 3;
-				player_sprite.play("up");
+				nextVelY = -GC.PLAYER_SPEED;
+				nextVelX = 0;
+				//player_sprite.play("up");
 			}
 			if (Input.pressed("down")) {
-				this.direction = 4;
-				player_sprite.play("down");
+				nextVelY = GC.PLAYER_SPEED;
+				nextVelX = 0;
+				//player_sprite.play("down");
 			}
 			
-			//move character
-			switch(this.direction) {
-				case 1:
-				x -= GC.PLAYER_SPEED;
-				if (collide("blocked", x, y)) {
-					x = Math.floor(x/32)*32+32;
-				}
-				if (x < -32) x = GC.SCREEN_WIDTH + 32;
-				break;
-				
-				case 2:
-				x += GC.PLAYER_SPEED;
-				if (collide("blocked", x, y)) {
-					x = Math.floor(x / 32) * 32;
-				}
-				if (x > GC.SCREEN_WIDTH) x = -32;
-				break;
-				case 3:
-				y -= GC.PLAYER_SPEED;
-				if (collide("blocked", x, y)) {
-					trace ('Collide!');
-				}
-				if (y < -32) y = GC.SCREEN_HEIGHT;
-				break;
-				case 4:
-				if (collide("blocked", x, y)) {
-					trace ('Collide!');
-				}
-				y += GC.PLAYER_SPEED;
-				if (y > GC.SCREEN_HEIGHT) y = -32;
-			}
+			checkCollision();
+			
+			x += currentVelX;
+			y += currentVelY;
+			
+			if ( x > GC.SCREEN_WIDTH) x = -32;
+			if ( x < -32) x = GC.SCREEN_WIDTH;
+			if ( y > GC.SCREEN_HEIGHT) y = -32;
+			if ( y < -32) y = GC.SCREEN_HEIGHT;
+			
 			super.update();
+		}
+		
+		private function checkCollision():void {
+			
+			if (collide("blocked", x + nextVelX, y + nextVelY) == null) {
+				currentVelX = nextVelX;
+				currentVelY = nextVelY;
+			}
+			
+			if (collide("blocked", x + currentVelX, y + currentVelY)) {
+				currentVelX = 0;
+				currentVelY = 0;
+				x = Math.floor(x / 32) * 32 +currentVelX;
+				y = Math.floor(y / 32) * 32 +currentVelY;
+				
+			}
 		}
 		
 	}

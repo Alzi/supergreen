@@ -12,15 +12,13 @@ package worlds
 	 */
 	public class Playground extends World 
 	{
-		
+		[Embed(source = '../assets/levels/testlevel.oel', mimeType = 'application/octet-stream')]
+		private const TESTLEVEL:Class;
 		
 		public function Playground() 
 		{
 			add(new Player);
-			add(new Level);
-			
-			
-			
+			add(new Level(TESTLEVEL));
 		}
 		
 	}

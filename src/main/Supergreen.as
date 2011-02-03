@@ -4,6 +4,7 @@ package main
 	import main.GC;
 	import net.flashpunk.FP;
 	import worlds.Playground;
+	import flash.utils.*;
 	
 	/**
 	 * ...
@@ -14,7 +15,7 @@ package main
 		
 		public function Supergreen():void 
 		{
-			super(GC.SCREEN_WIDTH, GC.SCREEN_HEIGHT);
+			super(GC.SCREEN_WIDTH, GC.SCREEN_HEIGHT, 64, true);
 			FP.world = new Playground();
 		}
 		
