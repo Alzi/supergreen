@@ -17,7 +17,7 @@ package players
 		[Embed(source = '../assets/gfx/player.png')]
 		private const PLAYER:Class;
 		private var player_sprite:Spritemap = new Spritemap(PLAYER, 32, 32);
-		private var direction:Number = 1; //Default-Direction = left
+		private var direction:Number = 0; //Default-Direction = left
 		
 		public function Player() 
 		{
@@ -33,6 +33,9 @@ package players
 			Input.define("right", Key.RIGHT, Key.D);
 			Input.define("up", Key.UP, Key.W);
 			Input.define("down", Key.DOWN, Key.S);
+			
+			//define Hitbox
+			setHitbox(32, 32, 0,0);
 					
 			// set Player to Coordinates (x,y)
 			super(60, 40);
@@ -62,15 +65,32 @@ package players
 			switch(this.direction) {
 				case 1:
 				x -= GC.PLAYER_SPEED;
+				if (collide("blocked", x, y)) {
+					x = Math.floor(x/32)*32+32;
+				}
+				if (x < -32) x = GC.SCREEN_WIDTH + 32;
 				break;
+				
 				case 2:
 				x += GC.PLAYER_SPEED;
+				if (collide("blocked", x, y)) {
+					x = Math.floor(x / 32) * 32;
+				}
+				if (x > GC.SCREEN_WIDTH) x = -32;
 				break;
 				case 3:
 				y -= GC.PLAYER_SPEED;
+				if (collide("blocked", x, y)) {
+					trace ('Collide!');
+				}
+				if (y < -32) y = GC.SCREEN_HEIGHT;
 				break;
 				case 4:
+				if (collide("blocked", x, y)) {
+					trace ('Collide!');
+				}
 				y += GC.PLAYER_SPEED;
+				if (y > GC.SCREEN_HEIGHT) y = -32;
 			}
 			super.update();
 		}
