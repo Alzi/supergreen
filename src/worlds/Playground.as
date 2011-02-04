@@ -1,10 +1,13 @@
 package worlds 
 {
+	import entities.Nuky;
+	import entities.Player;
+	import entities.Room;
 	import main.Background;
+	import net.flashpunk.Entity;
 	import net.flashpunk.World;
-	import levels.Level;
-	import players.Player;
-	import net.flashpunk.masks.Grid;
+	import levels.Level1;
+	import main.GC;
 	
 	
 	/**
@@ -13,15 +16,22 @@ package worlds
 	 */
 	public class Playground extends World 
 	{
-		[Embed(source = '../assets/levels/testlevel.oel', mimeType = 'application/octet-stream')]
-		private const TESTLEVEL:Class;
-		
 		public function Playground() 
 		{
+			var room:Room = new Room(GC.LEVEL_1);
+			add(room);
+			add(new Player(room.playerStartX, room.playerStartY));
 			
-			add(new Level(TESTLEVEL));
-			add(new Player);
-			add(new Background);
+			var dataList:XMLList = new XMLList;
+			dataList = room.xmlData.goodies.tile;
+			var dataElement:XML;
+			for each (dataElement in dataList) {
+				//trace (dataElement.@x);
+				if (dataElement.@tx == 0 && dataElement.@ty == 0) {
+					add(new Nuky(dataElement.@x, dataElement.@y));
+				}
+			}
+			
 		}
 		
 	}

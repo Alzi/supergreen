@@ -1,13 +1,11 @@
-package players 
+package entities 
 {
-	import flash.geom.Rectangle;
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.utils.Input;
 	import net.flashpunk.utils.Key;
 	import main.GC;
-	
 	/**
 	 * ...
 	 * @author marc
@@ -16,6 +14,7 @@ package players
 	{
 		[Embed(source = '../assets/gfx/player.png')]
 		private const PLAYER:Class;
+		
 		private var player_sprite:Spritemap = new Spritemap(PLAYER, 32, 32);
 		private var currentVelX:int = 0;  	//Default-X-Velocity
 		private var currentVelY:int = 0;	//Default-X-Velocity
@@ -23,13 +22,15 @@ package players
 		private var nextVelY:int = 0;
 		private var currentOrientation:String = "left";
 		private var nextOrientation:String;
+			
 		
-		
-		public function Player() 
+		public function Player(startX:int, startY:int):void
 		{
-			layer = 3;
+			layer = GC.LAYER_PLAYER;
+			type = "player";
+			
+			player_sprite.add("left", [4, 5, 6, 7, 5], GC.PLAYER_SPRITE_FR, true);
 			player_sprite.add("right", [0,1,2,3,1], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("left", [4,5,6,7,5], GC.PLAYER_SPRITE_FR, true);
 			player_sprite.add("up", [8,9,10,11,9], GC.PLAYER_SPRITE_FR, true);
 			player_sprite.add("down", [12,13,14,15,13], GC.PLAYER_SPRITE_FR, true);
 			
@@ -43,10 +44,8 @@ package players
 			
 			//define Hitbox
 			setHitbox(32, 32, 0, 0);
-					
-			// set Player to Coordinates (x,y)
-			// TODO get PlayerStart from LevelData
-			super(32, 32);
+			
+			super(startX, startY);
 		}
 		
 		override public function update():void 
@@ -94,21 +93,25 @@ package players
 		
 		private function checkCollision():void {
 			
-			if (collide("blocked", x + nextVelX, y + nextVelY) == null) {
-				currentVelX = nextVelX;
-				currentVelY = nextVelY;
-				currentOrientation = nextOrientation;
-			}
-			
-			if (collide("blocked", x + currentVelX, y + currentVelY)) {
+			if (collide("room", x + currentVelX, y + currentVelY)) {
 				currentVelX = 0;
 				currentVelY = 0;
 				x = Math.floor(x / 32) * 32 +currentVelX;
 				y = Math.floor(y / 32) * 32 +currentVelY;
 				
+			} 
+			else 
+			{
+				if (collide("room", x + nextVelX, y + nextVelY) == null) {
+					currentVelX = nextVelX;
+					currentVelY = nextVelY;
+					currentOrientation = nextOrientation;
+				}
+				var goody:Entity = collide("goody", x, y);
+				if (goody) {
+					goody.world.remove(goody);
+				}
 			}
 		}
-		
 	}
-
 }
