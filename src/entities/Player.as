@@ -1,6 +1,7 @@
 package entities 
 {
 	import net.flashpunk.Entity;
+	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.utils.Input;
@@ -107,9 +108,9 @@ package entities
 					currentVelY = nextVelY;
 					currentOrientation = nextOrientation;
 				}
-				var goody:Entity = collide("goody", x, y);
-				if (goody) {
-					goody.world.remove(goody);
+				var goody:Nuky = Nuky(collide("nuky", x, y));
+				if (goody){
+					goody.kill();
 				}
 			}
 		}

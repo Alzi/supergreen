@@ -30,6 +30,7 @@ package main
 		public static const LAYER_PLAYER:int = 1;
 		public static const LAYER_ENEMIES:int = 2;
 		public static const LAYER_GOODIES:int = 3;
+		public static const LAYER_BACKGROUND:int = 100;
 		
 		
 		
@@ -40,6 +41,8 @@ package main
 		[Embed(source = '../assets/levels/testlevel.oel', mimeType = 'application/octet-stream')]
 		public static const LEVEL_2:Class;
 		
+		[Embed(source = '../assets/levels/level.oel', mimeType = 'application/octet-stream')]
+		public static const LEVEL_3:Class;
 		
 	}	
 

@@ -1,13 +1,11 @@
 package worlds 
 {
-	import entities.Nuky;
-	import entities.Player;
-	import entities.Room;
-	import main.Background;
+	import entities.*;
+	import main.*;
 	import net.flashpunk.Entity;
+	import net.flashpunk.graphics.Text;
 	import net.flashpunk.World;
-	import levels.Level1;
-	import main.GC;
+	
 	
 	
 	/**
@@ -16,9 +14,11 @@ package worlds
 	 */
 	public class Playground extends World 
 	{
+		private var scoreText:Text = new Text("0",560,408,150,20);
 		public function Playground() 
 		{
-			var room:Room = new Room(GC.LEVEL_1);
+			add (new Background);
+			var room:Room = new Room(GC.LEVEL_3);
 			add(room);
 			add(new Player(room.playerStartX, room.playerStartY));
 			
@@ -32,6 +32,13 @@ package worlds
 				}
 			}
 			
+			addGraphic(scoreText);
+			
+		}
+		
+		override public function update ():void {
+			super.update();
+			scoreText.text = String(GV.points);
 		}
 		
 	}

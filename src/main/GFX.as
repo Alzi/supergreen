@@ -17,6 +17,9 @@ package main
 		
 		[Embed(source = '../assets/gfx/enemies.png')]
 		public static const GFX_ENEMIES:Class;
+		
+		[Embed(source = '../assets/gfx/background.jpg')]
+		public static const GFX_BACKGROUND:Class;
 	}
 
 }
