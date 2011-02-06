@@ -15,11 +15,12 @@ package main
 		[Embed(source = '../assets/gfx/player.png')]
 		public static const GFX_PLAYER:Class;
 		
-		[Embed(source = '../assets/gfx/enemies.png')]
+		[Embed(source = '../assets/gfx/ghost-tiles.png')]
 		public static const GFX_ENEMIES:Class;
 		
 		[Embed(source = '../assets/gfx/background.jpg')]
 		public static const GFX_BACKGROUND:Class;
+		
 	}
 
 }

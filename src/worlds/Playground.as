@@ -21,6 +21,7 @@ package worlds
 			var room:Room = new Room(GC.LEVEL_3);
 			add(room);
 			add(new Player(room.playerStartX, room.playerStartY));
+			add(new Enemy(96+32, 96));
 			
 			var dataList:XMLList = new XMLList;
 			dataList = room.xmlData.goodies.tile;
