@@ -3,8 +3,10 @@ package worlds
 	import entities.*;
 	import main.*;
 	import net.flashpunk.Entity;
+	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Text;
 	import net.flashpunk.World;
+	import net.flashpunk.tweens.misc.Alarm;
 	
 	
 	
@@ -21,25 +23,25 @@ package worlds
 			var room:Room = new Room(GC.LEVEL_3);
 			add(room);
 			add(new Player(room.playerStartX, room.playerStartY));
-			add(new Enemy(96+32, 96));
+			add(new Enemy(96 + 32, 96));
+			add(new Enemy(96 + 32, 96));
+			
+					
 			
 			var dataList:XMLList = new XMLList;
 			dataList = room.xmlData.goodies.tile;
 			var dataElement:XML;
 			for each (dataElement in dataList) {
-				//trace (dataElement.@x);
 				if (dataElement.@tx == 0 && dataElement.@ty == 0) {
 					add(new Nuky(dataElement.@x, dataElement.@y));
 				}
 			}
-			
 			addGraphic(scoreText);
-			
 		}
 		
 		override public function update ():void {
-			super.update();
 			scoreText.text = String(GV.points);
+			super.update();
 		}
 		
 	}

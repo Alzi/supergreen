@@ -46,8 +46,6 @@ package entities
 			
 			playerStartX = xmlData.playerstart.rect.@x;
 			playerStartY = xmlData.playerstart.rect.@y;
-			
-					
 		}
 	}
 }

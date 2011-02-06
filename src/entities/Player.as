@@ -45,8 +45,8 @@ package entities
 			
 			//define Hitbox
 			setHitbox(32, 32, 0, 0);
-			
-			super(startX, startY);
+			x = startX;
+			y = startY;
 		}
 		
 		override public function update():void 

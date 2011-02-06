@@ -39,14 +39,10 @@ package entities
 				break;
 					
 			}
-			
-			
 		}
 		
 		override public function removed():void {
-			//trace ("Later, Guys");
 			GV.points += 10;
-			trace (GV.points);
 		}
 	}
 }
