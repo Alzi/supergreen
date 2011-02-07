@@ -29,7 +29,8 @@ package entities
 					
 			spriteMap.add("water", [1,8,9,10,8], 1/6, true);
 			spriteMap.add("sun", [2,12,13,14,12], 1/6, true);
-			spriteMap.add("wind", [3,16,17,18,16], 1/6, true);
+			spriteMap.add("wind", [3, 16, 17, 18, 16], 1 / 6, true);
+			spriteMap.add("inactive", [11], 0, false);
 			
 			spriteMap.play(_goodyType);
 			
@@ -38,7 +39,9 @@ package entities
 		}
 		
 		override public function update():void {
-			super.update();
+			
+			//super.update();
+			
 		}
 		
 	}

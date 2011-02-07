@@ -11,7 +11,10 @@
 	</tilesets>
 	<layers>
 		<grid name="blocked" gridSize="32" color="#7700FF00" exportAsObjects="true" />
+		<grid name="ghostsBlocked" gridSize="32" color="#FF999900" exportAsObjects="true" />
 		<grid name="ghostsHome" gridSize="32" exportAsObjects="true" color="#77FFFFFF" />
+		<grid name="ghostsStart" gridSize="32" exportAsObjects="true" color="#FFFFFF00" />
+		
 		<grid name="playerstart" gridSize="32" exportAsObjects="true" color="#77FF0000" limit="1" />
 		<tiles name="walls" gridSize="32" />
 		<tiles name="goodies" gridSize="32" />

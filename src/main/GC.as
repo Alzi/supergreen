@@ -38,14 +38,18 @@ package main
 		
 		
 		//Level-data
-		[Embed(source = '../assets/levels/testlevel2.oel', mimeType = 'application/octet-stream')]
+/*		[Embed(source = '../assets/levels/testlevel2.oel', mimeType = 'application/octet-stream')]
 		public static const LEVEL_1:Class;
 		
 		[Embed(source = '../assets/levels/testlevel.oel', mimeType = 'application/octet-stream')]
-		public static const LEVEL_2:Class;
+		public static const LEVEL_2:Class;*/
 		
 		[Embed(source = '../assets/levels/level.oel', mimeType = 'application/octet-stream')]
 		public static const LEVEL_3:Class;
+		
+		[Embed(source = '../assets/levels/level2.oel', mimeType = 'application/octet-stream')]
+		public static const LEVEL_4:Class;
+		
 		
 	}	
 

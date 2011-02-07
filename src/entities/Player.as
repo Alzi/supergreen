@@ -23,6 +23,8 @@ package entities
 		private var nextVelY:int = 0;
 		private var currentOrientation:String = "right";
 		private var nextOrientation:String;
+		
+		public var mood:String = "angry";
 			
 		
 		public function Player(startX:int, startY:int):void
