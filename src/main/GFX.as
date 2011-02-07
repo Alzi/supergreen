@@ -21,6 +21,9 @@ package main
 		[Embed(source = '../assets/gfx/background.jpg')]
 		public static const GFX_BACKGROUND:Class;
 		
+		[Embed(source = '../assets/gfx/flower.png')]
+		public static const GFX_FLOWER:Class;
+		
 	}
 
 }

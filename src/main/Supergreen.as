@@ -19,8 +19,8 @@ package main
 		{
 			super(GC.SCREEN_WIDTH, GC.SCREEN_HEIGHT, 64, true);
 			FP.world = new Playground();
-			//FP.console.enable();
-			//FP.console.toggleKey = 111;
+			FP.console.enable();
+			FP.console.toggleKey = 111;
 		}
 		
 		override public function init():void 

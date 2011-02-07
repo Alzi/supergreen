@@ -8,6 +8,7 @@ package entities
 	import net.flashpunk.utils.Input;
 	import net.flashpunk.utils.Key;
 	import main.GC;
+	import main.GV;
 	/**
 	 * ...
 	 * @author marc
@@ -25,14 +26,24 @@ package entities
 		private var currentOrientation:String = "right";
 		private var nextOrientation:String;
 		private var superheroTimer:Alarm = new Alarm(GC.PLAYER_POWERUP_TIME, goNormal);
+		private var respawnTimer:Alarm = new Alarm(GC.PLAYER_RESPAWN_TIME, respawn);
+		private var invulnerableTimer:Alarm = new Alarm(GC.PLAYER_INVULNERABLE_TIME, goNormal);
+		private var isDead:Boolean = false;
+		
+		private var _startX:uint;
+		private var _startY:uint;
 		
 		public var mood:String = "afraid";
 		
 		public function Player(startX:int, startY:int):void
 		{
-			super(startX, startY);
+			_startX = startX;
+			_startY = startY;
+			super (_startX, _startY);
 			
 			addTween(superheroTimer);
+			addTween(respawnTimer);
+			addTween(invulnerableTimer);
 			
 			layer = GC.LAYER_PLAYER;
 			type = "player";
@@ -46,6 +57,8 @@ package entities
 			player_sprite.add("right-angry", [16,17,18,19,17], GC.PLAYER_SPRITE_FR, true);
 			player_sprite.add("up-angry", [24, 25, 26, 27, 25], GC.PLAYER_SPRITE_FR, true);
 			player_sprite.add("down-angry", [28, 29, 30, 31, 29], GC.PLAYER_SPRITE_FR, true);
+			
+			player_sprite.add("die", [32, 33, 34, 35, 36, 37, 38, 39,40], GC.PLAYER_SPRITE_FR, false);
 						
 			graphic = player_sprite;
 						
@@ -62,6 +75,10 @@ package entities
 		override public function update():void 
 		{
 			super.update();
+			
+			if (collide("enemy", x, y) && mood=="afraid") {
+				die();
+			}
 			
 			//check Input
 			if (Input.pressed("left")) {
@@ -89,18 +106,28 @@ package entities
 				//player_sprite.play("down");
 			}
 			
-			checkCollision();
-			player_sprite.play(currentOrientation+"-"+mood);
+			if (!isDead) {
+				checkCollision();
+				player_sprite.play(currentOrientation+"-"+mood);
 			
-			x += currentVelX;
-			y += currentVelY;
+				x += currentVelX;
+				y += currentVelY;
+			}
 			
-			
-			// hard-coded for the only existing level, maby needs to bee dynamic in future
+			//TODO  hard-coded for the only existing level, maby needs to bee dynamic in future
 			if ( x == 512 && currentOrientation == "right") x = 96;
 			if ( x == 96 && currentOrientation == "left") x = 512;
-			
-			
+		}
+		
+		private function respawn():void {
+			x = _startX;
+			y = _startY;
+			mood = "angry";
+			player_sprite.play("right-angry");
+			currentOrientation = "right";
+			isDead = false;
+			collidable = true;
+			invulnerableTimer.start();
 		}
 		
 		private function checkCollision():void {
@@ -126,6 +153,14 @@ package entities
 			}
 		}
 		
+		private function die():void {
+			mood = "afraid";
+			isDead = true;
+			player_sprite.play("die");
+			GV.lives -= 1;
+			respawnTimer.start();
+			collidable = false;
+		}
 		
 		public function goSuperhero():void {
 			mood = "angry";

@@ -67,7 +67,7 @@ package entities
 				break;
 			}
 			
-			
+			type = "enemy"; 
 			layer = GC.LAYER_ENEMIES;
 			graphic = enemySprite;
 			setHitbox(32, 32, 0, 0);

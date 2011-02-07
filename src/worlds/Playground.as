@@ -10,6 +10,7 @@ package worlds
 	import net.flashpunk.World;
 	import net.flashpunk.tweens.misc.Alarm;
 	import main.GFX;
+	import main.GV;
 	
 	/**
 	 * ...
@@ -19,15 +20,21 @@ package worlds
 	 */
 	public class Playground extends World 
 	{
-		private var scoreText:Text = new Text("0",560,408,150,20);
+		private var scoreText:Text = new Text("0", 560, 408, 150, 20);
+		private var lifeText:Text = new Text("3", 560, 319, 150, 20);
+		
 		public function Playground() 
-		{
+		{	
+			//for (var i:uint = 0; i < GV.lives; i++) {
+				//add (new LiveCounter(556+i*24,319));
+			//}
+			
 			add (new Background);
 			var room:Room = new Room(GC.LEVEL_4);
 			add(room);
+			
 			add(new Player(room.playerStartX, room.playerStartY));
 			add(new EnemyRoom(GC.LEVEL_4));
-					
 			
 			// add Goodies
 			var dataList:XMLList = new XMLList;
@@ -65,17 +72,14 @@ package worlds
 							  room.xmlData.ghostsStart.rect.@w,
 							  room.xmlData.ghostsStart.rect.@h);
 							  
-							  
-							  
-			
-			
 			//add enemies
 			add(new Enemy(enemyHome, enemyStart, "yellow"));
+			add(new Enemy(enemyHome, enemyStart, "yellow"));
+			add(new Enemy(enemyHome, enemyStart, "black"));
 			add(new Enemy(enemyHome, enemyStart, "black"));
 			
-			
-			
 			addGraphic(scoreText);
+			addGraphic(lifeText);
 		}
 		
 		
@@ -83,8 +87,10 @@ package worlds
 			
 		
 		override public function update ():void {
-			scoreText.text = String(GV.points);
 			super.update();
+			scoreText.text = String(GV.points);
+			lifeText.text = String(GV.lives);
+			
 		}
 		
 	}

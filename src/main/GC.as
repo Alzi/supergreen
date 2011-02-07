@@ -13,7 +13,11 @@ package main
 		
 		public static const PLAYER_SPEED:uint = 2;				// Pixel per Frame;
 		public static const PLAYER_SPRITE_FR:Number = 1 / 4; 	// Player-Sprite Animation-Framerate
-		public static const PLAYER_POWERUP_TIME:Number = 400;
+		public static const PLAYER_POWERUP_TIME:Number = 250;
+		public static const PLAYER_RESPAWN_TIME:Number = 250;
+		public static const PLAYER_INVULNERABLE_TIME:Number = 64;
+		
+		
 		
 		public static const ENEMY_SPEED:Number = 2; 				// Pixel per Frame;
 		public static const ENEMY_SPRITE_FR:Number = 1 / 2;		
@@ -34,10 +38,11 @@ package main
 		
 		
 		// Graphic-layer
-		public static const LAYER_ROOM:int = 50;
 		public static const LAYER_PLAYER:int = 1;
 		public static const LAYER_ENEMIES:int = 2;
 		public static const LAYER_GOODIES:int = 3;
+		public static const LAYER_INFOS:int = 4;
+		public static const LAYER_ROOM:int = 50;
 		public static const LAYER_BACKGROUND:int = 100;
 		
 		
