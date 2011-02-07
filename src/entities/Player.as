@@ -4,6 +4,7 @@ package entities
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.Spritemap;
+	import net.flashpunk.tweens.misc.Alarm;
 	import net.flashpunk.utils.Input;
 	import net.flashpunk.utils.Key;
 	import main.GC;
@@ -23,22 +24,29 @@ package entities
 		private var nextVelY:int = 0;
 		private var currentOrientation:String = "right";
 		private var nextOrientation:String;
+		private var superheroTimer:Alarm = new Alarm(GC.PLAYER_POWERUP_TIME, goNormal);
 		
-		public var mood:String = "angry";
-			
+		public var mood:String = "afraid";
 		
 		public function Player(startX:int, startY:int):void
 		{
 			super(startX, startY);
 			
+			addTween(superheroTimer);
+			
 			layer = GC.LAYER_PLAYER;
 			type = "player";
 			
-			player_sprite.add("left", [4, 5, 6, 7, 5], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("right", [0,1,2,3,1], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("up", [8,9,10,11,9], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("down", [12,13,14,15,13], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("left-afraid", [4, 5, 6, 7, 5], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("right-afraid", [0,1,2,3,1], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("up-afraid", [8,9,10,11,9], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("down-afraid", [12, 13, 14, 15, 13], GC.PLAYER_SPRITE_FR, true);
 			
+			player_sprite.add("left-angry", [20, 21, 22, 23, 21], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("right-angry", [16,17,18,19,17], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("up-angry", [24, 25, 26, 27, 25], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("down-angry", [28, 29, 30, 31, 29], GC.PLAYER_SPRITE_FR, true);
+						
 			graphic = player_sprite;
 						
 			//define Inputs
@@ -82,7 +90,7 @@ package entities
 			}
 			
 			checkCollision();
-			player_sprite.play(currentOrientation);
+			player_sprite.play(currentOrientation+"-"+mood);
 			
 			x += currentVelX;
 			y += currentVelY;
@@ -116,6 +124,16 @@ package entities
 					goody.kill();
 				}
 			}
+		}
+		
+		
+		public function goSuperhero():void {
+			mood = "angry";
+			superheroTimer.start();
+		}
+		
+		private function goNormal():void {
+			mood = "afraid";
 		}
 	}
 }

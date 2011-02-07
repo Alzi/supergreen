@@ -10,10 +10,15 @@ package main
 		//some defaults
 		public static const SCREEN_WIDTH:uint = 640;
 		public static const SCREEN_HEIGHT:uint = 480;
+		
 		public static const PLAYER_SPEED:uint = 2;				// Pixel per Frame;
 		public static const PLAYER_SPRITE_FR:Number = 1 / 4; 	// Player-Sprite Animation-Framerate
+		public static const PLAYER_POWERUP_TIME:Number = 400;
+		
 		public static const ENEMY_SPEED:Number = 2; 				// Pixel per Frame;
 		public static const ENEMY_SPRITE_FR:Number = 1 / 2;		
+		
+		public static const GOODY_REGENERATION_TIME:Number = 600;
 		
 		
 		

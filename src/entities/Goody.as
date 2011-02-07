@@ -4,6 +4,7 @@ package entities
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.Spritemap;
+	import net.flashpunk.tweens.misc.Alarm;
 	
 	/**
 	 * ...
@@ -14,6 +15,9 @@ package entities
 		public var _goodyType:String;
 		
 		private var spriteMap:Spritemap = new Spritemap(GC.GOODIES_TILES, 32, 32);
+		private var inactiveCounter:Alarm = new Alarm(GC.GOODY_REGENERATION_TIME, setActive);
+		
+		public var isActive:Boolean = true;
 		
 		
 		public function Goody(goodyType:String,startX:uint, startY:uint) 
@@ -21,6 +25,9 @@ package entities
 			// I don't understand it, but it it important for collision purposes to call this first
 			// I think it is because the _class variable isn't set before this call
 			super(startX, startY);
+			
+			
+			addTween(inactiveCounter);
 			
 			type = "goody";
 			_goodyType = goodyType;
@@ -40,8 +47,20 @@ package entities
 		
 		override public function update():void {
 			
+			var hero:Player = Player(collide("player", x, y));
+			if (hero && isActive) {
+				isActive = false;
+				spriteMap.play("inactive");
+				inactiveCounter.start();
+				hero.goSuperhero();
+			}
 			//super.update();
 			
+		}
+		
+		private function setActive():void {
+			spriteMap.play(_goodyType);
+			isActive = true;
 		}
 		
 	}
