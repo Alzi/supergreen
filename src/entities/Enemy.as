@@ -37,6 +37,8 @@ package entities
 		
 		public function Enemy(startX:int, startY:int) 
 		{
+			super(startX, startY);			
+
 			//for trying out the animation
 			//TODO The Framerate should be controlled by a public const in GC
 			enemySprite.add("left",  [6, 7,6,7,6,7,6,7,6,7,6,7,8,8], 1 / 4, true);
@@ -47,46 +49,13 @@ package entities
 			layer = GC.LAYER_ENEMIES;
 			graphic = enemySprite;
 			setHitbox(32, 32, 0, 0);
-			
-			//Start-Direction
-			super(startX, startY);
 		}
-		
-		private function getPossibleDirections():Array {
-			var directions:Array = new Array();
-			if (!collide("room", x + GC.ENEMY_SPEED,y) && currentDirection != "left") {
-				directions.push("right");
-			}
-			if (collide("room", x - GC.ENEMY_SPEED,y) == null && currentDirection != "right") {
-				directions.push("left");
-			}
-			if (collide("room", x, y + GC.ENEMY_SPEED) == null && currentDirection != "up") {
-				directions.push("down");
-			}
-			if (collide("room", x, y - GC.ENEMY_SPEED) == null && currentDirection != "down") {
-				directions.push("up");
-			}
-			return (directions);
-		}
-		
-		private function isOnGrid():Boolean {
-			if (x % 32 == 0 && y % 32 == 0) {
-				return true;
-			}
-			return false;
-		}
-		
 		
 		override public function update():void {
-			
-			
-						
-			
 			if (isOnGrid()) {
 				
 				var directions:Array = getPossibleDirections();
 				currentDirection = FP.choose(directions);
-				
 				
 				if (!collide("nuky", x, y) && !collide("goody",x,y)) {
 					if (FP.rand(100) > 80) {
@@ -118,17 +87,34 @@ package entities
 				velY = -velY;
 			}
 			
-			
 			//doesn't reset if it is the same as last call
 			enemySprite.play(currentDirection);
 			x += velX;
 			y += velY;
 		}
 		
+		private function isOnGrid():Boolean {
+			if (x % 32 == 0 && y % 32 == 0) {
+				return true;
+			}
+			return false;
+		}
 		
-		
-		
-		
+		private function getPossibleDirections():Array {
+			var directions:Array = new Array();
+			if (!collide("room", x + GC.ENEMY_SPEED,y) && currentDirection != "left") {
+				directions.push("right");
+			}
+			if (collide("room", x - GC.ENEMY_SPEED,y) == null && currentDirection != "right") {
+				directions.push("left");
+			}
+			if (collide("room", x, y + GC.ENEMY_SPEED) == null && currentDirection != "up") {
+				directions.push("down");
+			}
+			if (collide("room", x, y - GC.ENEMY_SPEED) == null && currentDirection != "down") {
+				directions.push("up");
+			}
+			return (directions);
+		}
 	}
-
 }

@@ -27,6 +27,8 @@ package entities
 		
 		public function Player(startX:int, startY:int):void
 		{
+			super(startX, startY);
+			
 			layer = GC.LAYER_PLAYER;
 			type = "player";
 			
@@ -45,8 +47,6 @@ package entities
 			
 			//define Hitbox
 			setHitbox(32, 32, 0, 0);
-			x = startX;
-			y = startY;
 		}
 		
 		override public function update():void 
