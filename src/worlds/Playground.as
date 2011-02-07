@@ -13,6 +13,8 @@ package worlds
 	/**
 	 * ...
 	 * @author marc
+	 * 
+	 * 
 	 */
 	public class Playground extends World 
 	{
@@ -31,11 +33,27 @@ package worlds
 			var dataList:XMLList = new XMLList;
 			dataList = room.xmlData.goodies.tile;
 			var dataElement:XML;
+			
+			 
 			for each (dataElement in dataList) {
-				if (dataElement.@tx == 0 && dataElement.@ty == 0) {
+				
+				// is possible, cause all gfx set in level-editor are in first row
+				switch (uint(dataElement.@tx)) {
+					case 0:
 					add(new Nuky(dataElement.@x, dataElement.@y));
+					break;
+					case 32:
+					add(new Goody("water",dataElement.@x, dataElement.@y));
+					break;
+					case 64:
+					add(new Goody("sun",dataElement.@x, dataElement.@y));
+					break;
+					case 96:
+					add(new Goody("wind",dataElement.@x, dataElement.@y));
+					break;
 				}
 			}
+			
 			addGraphic(scoreText);
 		}
 		

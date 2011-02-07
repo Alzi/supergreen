@@ -21,7 +21,7 @@ package entities
 		private var currentVelY:int = 0;	//Default-X-Velocity
 		private var nextVelX:int = 0;		
 		private var nextVelY:int = 0;
-		private var currentOrientation:String = "left";
+		private var currentOrientation:String = "right";
 		private var nextOrientation:String;
 			
 		
@@ -51,6 +51,8 @@ package entities
 		
 		override public function update():void 
 		{
+			super.update();
+			
 			//check Input
 			if (Input.pressed("left")) {
 				nextVelX = -GC.PLAYER_SPEED;
@@ -78,18 +80,17 @@ package entities
 			}
 			
 			checkCollision();
+			player_sprite.play(currentOrientation);
 			
 			x += currentVelX;
 			y += currentVelY;
 			
-			player_sprite.play(currentOrientation);
 			
-			if ( x > GC.SCREEN_WIDTH) x = -32;
-			if ( x < -32) x = GC.SCREEN_WIDTH;
-			if ( y > GC.SCREEN_HEIGHT) y = -32;
-			if ( y < -32) y = GC.SCREEN_HEIGHT;
+			// hard-coded for the only existing level, maby needs to bee dynamic in future
+			if ( x == 512 && currentOrientation == "right") x = 96;
+			if ( x == 96 && currentOrientation == "left") x = 512;
 			
-			super.update();
+			
 		}
 		
 		private function checkCollision():void {

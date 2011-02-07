@@ -38,6 +38,7 @@ package entities
 		public function Enemy(startX:int, startY:int) 
 		{
 			//for trying out the animation
+			//TODO The Framerate should be controlled by a public const in GC
 			enemySprite.add("left",  [6, 7,6,7,6,7,6,7,6,7,6,7,8,8], 1 / 4, true);
 			enemySprite.add("right", [9, 10,9,10,9,10,9,10,9,10,9,10,11,11], 1 / 4, true);
 			enemySprite.add("up", 	 [3, 4,3,4,3,4,3,4,3,4,3,4,3,4,5,5], 1 / 4, true);
@@ -78,9 +79,23 @@ package entities
 		
 		override public function update():void {
 			
-			var directions:Array = getPossibleDirections();
-			currentDirection = FP.choose(directions);
+			
 						
+			
+			if (isOnGrid()) {
+				
+				var directions:Array = getPossibleDirections();
+				currentDirection = FP.choose(directions);
+				
+				
+				if (!collide("nuky", x, y) && !collide("goody",x,y)) {
+					if (FP.rand(100) > 80) {
+						FP.world.add(new Nuky(x, y));
+					}
+					
+				}
+			}
+			
 			switch (currentDirection) {
 				case "right":
 				velX = GC.ENEMY_SPEED;
@@ -98,15 +113,12 @@ package entities
 				velX = 0;
 				velY = GC.ENEMY_SPEED;
 				break;
+				default:
+				velX = -velX;
+				velY = -velY;
 			}
-			if (isOnGrid()) {
-				if (!collide("nuky", x, y)) {
-					if (FP.rand(100) > 80) {
-						FP.world.add(new Nuky(x, y));
-					}
-					
-				}
-			}
+			
+			
 			//doesn't reset if it is the same as last call
 			enemySprite.play(currentDirection);
 			x += velX;

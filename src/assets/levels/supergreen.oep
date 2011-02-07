@@ -8,22 +8,12 @@
 	<tilesets>
 		<tileset name="walls" image="level-tiles.png" tileWidth="32" tileHeight="32" />
 		<tileset name="goodies" image="goodies.png" tileWidth="32" tileHeight="32" />
-		<tileset name="enemies" image="enemies.png" tileWidth="32" tileHeight="32" />
-		
 	</tilesets>
-	
-	<objects>
-		<object name="player" image="player.png" width="32" height="32" limit="1" imageWidth="32" imageHeight="32" />
-	</objects>
-	
 	<layers>
 		<grid name="blocked" gridSize="32" color="#7700FF00" exportAsObjects="true" />
 		<grid name="ghostsHome" gridSize="32" exportAsObjects="true" color="#77FFFFFF" />
 		<grid name="playerstart" gridSize="32" exportAsObjects="true" color="#77FF0000" limit="1" />
 		<tiles name="walls" gridSize="32" />
 		<tiles name="goodies" gridSize="32" />
-		<tiles name="enemies" gridSize="32" />
-		<objects name="player" gridSize="16" />	
 	</layers>
-	
 </project>
