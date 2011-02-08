@@ -160,7 +160,8 @@ package entities
 		
 		private function die():void {
 			GV.points += 100;
-			this.world.add(new EnemyGhost(x,y,_homePoint,_color));	
+			this.world.add(new EnemyGhost(x, y, _homePoint, _color));
+			this.world.add(new KillPointsEnemy(x, y));
 			this.world.remove(this);
 		}
 	}
