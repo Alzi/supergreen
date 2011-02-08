@@ -3,6 +3,7 @@ package main
 	import net.flashpunk.Engine;
 	import main.GC;
 	import net.flashpunk.FP;
+	import worlds.Intro;
 	import worlds.Playground;
 	import flash.utils.*;
 	
@@ -19,7 +20,7 @@ package main
 		public function Supergreen():void 
 		{
 			super(GC.SCREEN_WIDTH, GC.SCREEN_HEIGHT, 64, true);
-			FP.world = new Playground();
+			FP.world = new Intro();
 			//FP.console.enable();
 			//FP.console.toggleKey = 111;
 		}

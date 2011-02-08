@@ -13,6 +13,7 @@ package entities
 	import net.flashpunk.tweens.misc.Alarm;
 	import worlds.Playground;
 	import entities.EnemyGhost;
+	import main.SoundManager;
 	
 	/**
 	 * 
@@ -90,6 +91,7 @@ package entities
 				if (!collide("nuky", x, y) && !collide("goody",x,y) && !isAtHome) {
 					if (FP.rand(100) < GC.NUKY_RESPAWN_CHANCE) {
 						FP.world.add(new Nuky(x, y));
+						SoundManager.i.playSound("nuky_spawn");
 					}
 				}
 			}
@@ -160,6 +162,7 @@ package entities
 		
 		private function die():void {
 			GV.points += 100;
+			SoundManager.i.playSound("enemy_killed");
 			this.world.add(new EnemyGhost(x, y, _homePoint, _color));
 			this.world.add(new KillPointsEnemy(x, y));
 			this.world.remove(this);

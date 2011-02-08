@@ -23,13 +23,8 @@ package main
 		public static const GOODY_REGENERATION_TIME:Number = 600;
 		public static const NUKY_RESPAWN_CHANCE:uint = 15;
 		
-		
-		
-		// embeded GFX
-		[Embed(source = '../assets/gfx/level-tiles.png')]
-		public static const ROOM_TILES:Class;
-		[Embed(source = '../assets/gfx/goodies.png')]
-		public static const GOODIES_TILES:Class;
+		public static const MUSIC_VOLUME:Number = 1;
+		public static const SOUND_VOLUME:Number = 1;
 		
 		
 		//for handling the Ogmo-Level (tiles are defined by x and y - coords only) 

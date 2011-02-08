@@ -3,16 +3,18 @@ package entities
 	import main.GV;
 	import net.flashpunk.Entity;
 	import main.GC;
+	import main.GFX;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.graphics.Tilemap;
+	import main.SoundManager;
 	/**
 	 * ...
 	 * @author marc
 	 */
 	public class Nuky extends Entity 
 	{
-		private var sprite:Spritemap = new Spritemap(GC.GOODIES_TILES, 32, 32, animationEnd);
+		private var sprite:Spritemap = new Spritemap(GFX.GFX_GOODIES, 32, 32, animationEnd);
 		public function Nuky(startX:int, startY:int) 
 		{
 			super(startX, startY);
@@ -26,8 +28,8 @@ package entities
 		}
 		
 		public function kill():void {
-			
 			sprite.play("explode");
+			SoundManager.i.playSound("munch",0.95);
 		}
 		
 		public function animationEnd():void {

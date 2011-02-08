@@ -1,5 +1,6 @@
 package entities 
 {
+	import main.SoundManager;
 	import net.flashpunk.Entity;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
@@ -25,7 +26,7 @@ package entities
 		private var nextVelY:int = 0;
 		private var currentOrientation:String = "right";
 		private var nextOrientation:String;
-		private var superheroTimer:Alarm = new Alarm(GC.PLAYER_POWERUP_TIME, goNormal);
+		private var superheroTimer:Alarm = new Alarm(GC.PLAYER_POWERUP_TIME, stopLoop);
 		private var respawnTimer:Alarm = new Alarm(GC.PLAYER_RESPAWN_TIME, respawn);
 		private var invulnerableTimer:Alarm = new Alarm(GC.PLAYER_INVULNERABLE_TIME, goNormal);
 		private var isDead:Boolean = false;
@@ -109,9 +110,11 @@ package entities
 			if (!isDead) {
 				checkCollision();
 				player_sprite.play(currentOrientation+"-"+mood);
-			
+				
 				x += currentVelX;
 				y += currentVelY;
+				
+				
 			}
 			
 			//TODO  hard-coded for the only existing level, maby needs to bee dynamic in future
@@ -122,12 +125,13 @@ package entities
 		private function respawn():void {
 			x = _startX;
 			y = _startY;
+			
 			mood = "angry";
 			player_sprite.play("right-angry");
 			currentOrientation = "right";
 			isDead = false;
 			collidable = true;
-			invulnerableTimer.start();
+			SoundManager.i.playSound("sh_end", 0, 0, goNormal);
 		}
 		
 		private function checkCollision():void {
@@ -154,6 +158,7 @@ package entities
 		}
 		
 		private function die():void {
+			SoundManager.i.playSound("hero_killed");
 			mood = "afraid";
 			isDead = true;
 			player_sprite.play("die");
@@ -165,10 +170,18 @@ package entities
 		public function goSuperhero():void {
 			mood = "angry";
 			superheroTimer.start();
+			SoundManager.i.loopSound(SoundManager.i.superheroLoop);
 		}
 		
 		private function goNormal():void {
-			mood = "afraid";
+			if (superheroTimer.remaining == 0) {
+				mood = "afraid";
+			}
+		}
+		
+		private function stopLoop():void {
+			SoundManager.i.stopLoop(SoundManager.i.superheroLoop);
+			SoundManager.i.playSound("sh_end",0,0,goNormal);
 		}
 	}
 }

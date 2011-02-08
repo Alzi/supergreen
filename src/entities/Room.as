@@ -12,7 +12,7 @@ package entities
 	 */
 	public class Room extends Entity
 	{
-		public var roomTiles:Tilemap = new Tilemap(GC.ROOM_TILES, GC.SCREEN_WIDTH, GC.SCREEN_HEIGHT, 32, 32);
+		public var roomTiles:Tilemap = new Tilemap(GFX.GFX_LEVELTILES, GC.SCREEN_WIDTH, GC.SCREEN_HEIGHT, 32, 32);
 		public var goodies:Tilemap = new Tilemap(GFX.GFX_GOODIES, GC.SCREEN_WIDTH, GC.SCREEN_HEIGHT, 32, 32);
 		public var blockedGrid:Grid = new Grid(GC.SCREEN_WIDTH, GC.SCREEN_HEIGHT, 32, 32, 0, 0);
 		public var playerStartX:int;

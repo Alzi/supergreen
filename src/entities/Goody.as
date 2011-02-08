@@ -1,10 +1,12 @@
 package entities 
 {
 	import main.GC;
+	import main.GFX;
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.tweens.misc.Alarm;
+	import main.SoundManager;
 	
 	/**
 	 * ...
@@ -14,7 +16,7 @@ package entities
 	{
 		public var _goodyType:String;
 		
-		private var spriteMap:Spritemap = new Spritemap(GC.GOODIES_TILES, 32, 32);
+		private var spriteMap:Spritemap = new Spritemap(GFX.GFX_GOODIES, 32, 32);
 		private var inactiveCounter:Alarm = new Alarm(GC.GOODY_REGENERATION_TIME, setActive);
 		
 		public var isActive:Boolean = true;
@@ -53,12 +55,14 @@ package entities
 				spriteMap.play("inactive");
 				inactiveCounter.start();
 				hero.goSuperhero();
+				SoundManager.i.playSound("goody_" + _goodyType);
 			}
 			//super.update();
 			
 		}
 		
 		private function setActive():void {
+			SoundManager.i.playSound("goody_reapear");
 			spriteMap.play(_goodyType);
 			isActive = true;
 		}

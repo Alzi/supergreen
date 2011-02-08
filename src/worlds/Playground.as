@@ -105,12 +105,16 @@ package worlds
 			//add enemies (pick one of the shuffled homePoints (max 4 in this level...))
 			setEnemy(startPointsStack.shift(), "yellow" );
 			setEnemy(startPointsStack.shift(), "black" );
+					
 		}
 		
 		override public function update ():void {
 			super.update();
 			scoreText.text = String(GV.points);
 			lifeText.text = String(GV.lifes);
+			if (typeCount("nuky") == 0) {
+				FP.world = new GameWon();
+			}
 		}
 		
 		
