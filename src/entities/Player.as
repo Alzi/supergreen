@@ -157,7 +157,7 @@ package entities
 			mood = "afraid";
 			isDead = true;
 			player_sprite.play("die");
-			GV.lives -= 1;
+			GV.lifes -= 1;
 			respawnTimer.start();
 			collidable = false;
 		}

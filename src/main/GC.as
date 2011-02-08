@@ -17,12 +17,11 @@ package main
 		public static const PLAYER_RESPAWN_TIME:Number = 250;
 		public static const PLAYER_INVULNERABLE_TIME:Number = 64;
 		
-		
-		
 		public static const ENEMY_SPEED:Number = 2; 				// Pixel per Frame;
-		public static const ENEMY_SPRITE_FR:Number = 1 / 2;		
+		public static const ENEMY_SPRITE_FR:Number = 1 / 4;		
 		
 		public static const GOODY_REGENERATION_TIME:Number = 600;
+		public static const NUKY_RESPAWN_CHANCE:uint = 15;
 		
 		
 		

@@ -6,24 +6,26 @@ package entities
 	import net.flashpunk.graphics.Spritemap;
 	import main.GFX;
 	import main.GC;
+	import main.GV;
 	import net.flashpunk.FP;
-	import net.flashpunk.graphics.TiledImage;
 	import net.flashpunk.Tween;
 	import net.flashpunk.tweens.misc.Alarm;
+	import worlds.Playground;
+	import entities.EnemyGhost;
 	
 	/**
+	 * 
 	 * The little ghost should be able to do some things:
 	 * moving:
 	 * random movement, decide if change of direction should occur at crossroads, checking collision ahead
-	 * fleeing:
+	 * 
+	 * //TODO fleeing:
 	 * if the Hero eats a goody and consequently has superpowers with an appetite for ghosts,
 	 * they will try to put as much distance between them and the hungry guy, as they can.
 	 * 
 	 * spawn new Nukies:
 	 * the aim of the game is to eat all Nukies, so the villains obviously have to play their role in preventing that.
-	 * check collision with 'nuky', if not spawn one on grid
-	 * 
-	 * 
+	 * check collision with 'nuky', if not spawn one on grid (~ 20%?)
 	 * 
 	 * @author marc
 	 */
@@ -35,35 +37,35 @@ package entities
 		private var currentDirection:String;
 		private var _homeRect:Rectangle;
 		private var homeCounter:Alarm = new Alarm(250, goToStartPoint);
-		private var atHome:Boolean = false;
+		private var isAtHome:Boolean = true;
 		private var _startRect:Rectangle;
 		private var _color:String;
+		private var _startX:int;
+		private var _startY:int;
+		private var playground:Playground = Playground(FP.world);
 		
-		public function Enemy(homeRect:Rectangle, startRect:Rectangle, color:String)
+		public function Enemy(startX:int, startY:int, startRect:Rectangle, color:String)
 		{
 			_startRect = startRect;
-			_homeRect = homeRect;
 			_color = color;
+			_startX = startX;
+			_startY = startY;
 			
-			//set start-point on a random grid-tile at home area
-			super(Math.floor((FP.rand(_homeRect.width)+homeRect.x) / 32)*32, Math.floor((FP.rand(_homeRect.height)+homeRect.y)/32)*32);
-			
-			//for trying out the animation
-			//TODO The Framerate should be controlled by a public const in GC
+			super(_startX, _startY);
 			
 			switch (_color) {
 				case "yellow":
-				enemySprite.add("left",  [6,7,6,7,6,7,6,7,6,7,6,7,8,8], 1 / 4, true);
-				enemySprite.add("right", [9, 10,9,10,9,10,9,10,9,10,9,10,11,11], 1 / 4, true);
-				enemySprite.add("up", 	 [3, 4,3,4,3,4,3,4,3,4,3,4,3,4,5,5], 1 / 4, true);
-				enemySprite.add("down",  [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 2, 2, 2, 2, 2], 1 / 4, true);
+				enemySprite.add("left",  [6,7,6,7,6,7,6,7,6,7,6,7,8,8], GC.ENEMY_SPRITE_FR, true);
+				enemySprite.add("right", [9, 10,9,10,9,10,9,10,9,10,9,10,11,11], GC.ENEMY_SPRITE_FR, true);
+				enemySprite.add("up", 	 [3, 4,3,4,3,4,3,4,3,4,3,4,3,4,5,5], GC.ENEMY_SPRITE_FR, true);
+				enemySprite.add("down",  [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 2, 2, 2, 2, 2], GC.ENEMY_SPRITE_FR, true);
 				break;
 				
 				case "black":
-				enemySprite.add("left",  [12,13,12,13,12,13,12,13,12,13,12,13,12,13,14,14], 1 / 4, true);
-				enemySprite.add("right", [15,16,15,16,15,16,15,16,15,16,15,16,15,16,17,17], 1 / 4, true);
-				enemySprite.add("up", 	 [21,22,21,22,21,22,21,22,21,22,21,22,21,22,23,23], 1 / 4, true);
-				enemySprite.add("down",  [18,19,18,19,18,19,18,19,18,19,18,19,18,19,20,20], 1 / 4, true);
+				enemySprite.add("left",  [12,13,12,13,12,13,12,13,12,13,12,13,12,13,14,14], GC.ENEMY_SPRITE_FR, true);
+				enemySprite.add("right", [15,16,15,16,15,16,15,16,15,16,15,16,15,16,17,17], GC.ENEMY_SPRITE_FR, true);
+				enemySprite.add("up", 	 [21,22,21,22,21,22,21,22,21,22,21,22,21,22,23,23], GC.ENEMY_SPRITE_FR, true);
+				enemySprite.add("down",  [18,19,18,19,18,19,18,19,18,19,18,19,18,19,20,20], GC.ENEMY_SPRITE_FR, true);
 				break;
 			}
 			
@@ -71,29 +73,23 @@ package entities
 			layer = GC.LAYER_ENEMIES;
 			graphic = enemySprite;
 			setHitbox(32, 32, 0, 0);
-			addTween(homeCounter, false);
+			addTween(homeCounter, true);
 		}
 		
 		override public function update():void {
 			
 			var player:Player = Player(collide("player", x, y));
 			if (player && player.mood == "angry") {
-				this.world.add(new Enemy(_homeRect, _startRect, _color));
-				this.world.remove(this);
+				this.die();
 			}
-			
-			
 						
 			if (isOnGrid()) {
-				if (collideRect(x, y, _homeRect.x, _homeRect.y, _homeRect.width, _homeRect.height)) {
-					isAtHome();
-				}
 				
 				var directions:Array = getPossibleDirections();
 				currentDirection = FP.choose(directions);
 				
-				if (!collide("nuky", x, y) && !collide("goody",x,y) && !atHome) {
-					if (FP.rand(100) > 80) {
+				if (!collide("nuky", x, y) && !collide("goody",x,y) && !isAtHome) {
+					if (FP.rand(100) < GC.NUKY_RESPAWN_CHANCE) {
 						FP.world.add(new Nuky(x, y));
 					}
 				}
@@ -131,16 +127,8 @@ package entities
 			
 		}
 		
-		private function isAtHome():void {
-			if (!atHome) {
-				atHome = true;
-				homeCounter.start();
-			}
-			
-		}
-		
 		private function goToStartPoint():void {
-			atHome = false;
+			isAtHome = false;
 			
 			x = Math.floor((FP.rand(_startRect.width) + _startRect.x)/32)*32;
 			y = Math.floor((FP.rand(_startRect.height) + _startRect.y)/32)*32;
@@ -169,6 +157,12 @@ package entities
 				directions.push("up");
 			}
 			return (directions);
+		}
+		
+		private function die():void {
+			GV.points += 100;
+			this.world.add(new EnemyGhost(x, y, _startX, _startY));	
+			this.world.remove(this);
 		}
 	}
 }

@@ -24,6 +24,12 @@ package main
 		[Embed(source = '../assets/gfx/flower.png')]
 		public static const GFX_FLOWER:Class;
 		
+		[Embed(source = '../assets/gfx/ghost-ghost.png')]
+		public static const GFX_ENEMY_GHOST:Class;
+		
+		[Embed(source = '../assets/gfx/kill-points.png')]
+		public static const GFX_KILL_POINTS:Class;
+		
 	}
 
 }

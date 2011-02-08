@@ -1,39 +1,53 @@
 package worlds 
 {
 	import entities.*;
+	import flash.display.InteractiveObject;
 	import flash.geom.Rectangle;
 	import main.*;
 	import net.flashpunk.Entity;
 	import net.flashpunk.FP;
-	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.graphics.Text;
+	import net.flashpunk.Tween;
 	import net.flashpunk.World;
-	import net.flashpunk.tweens.misc.Alarm;
-	import main.GFX;
 	import main.GV;
+	import net.flashpunk.utils.Ease;
+	
+	import net.flashpunk.tweens.motion.LinearMotion;
 	
 	/**
 	 * ...
 	 * @author marc
-	 * 
-	 * 
+	 * The game-level.
+	 * By now it isn't planned to have more than one.
+	 * The player stays in this world until he/she looses 3 lifes
+	 * everytime a player dies, the ghosts and the player are reset to their home
 	 */
 	public class Playground extends World 
 	{
+		private var room:Room = new Room(GC.LEVEL_4);
 		private var scoreText:Text = new Text("0", 560, 408, 150, 20);
+		
+		//TODO implement a graphical life-counter
 		private var lifeText:Text = new Text("3", 560, 319, 150, 20);
 		
+		//the 'home-zome' where the villains unpatiently await their awakening
+		private var enemyHome:Rectangle = new Rectangle;
+		private var enemyStart:Rectangle = new Rectangle;
+		
+		private var colorStack:Array;
+		
 		public function Playground() 
-		{	
-			//for (var i:uint = 0; i < GV.lives; i++) {
-				//add (new LiveCounter(556+i*24,319));
-			//}
+		{
+			
+		}
+			
+		/**
+		 * level-setup
+		 */
+		override public function begin():void {
 			
 			add (new Background);
-			var room:Room = new Room(GC.LEVEL_4);
-			add(room);
-			
-			add(new Player(room.playerStartX, room.playerStartY));
+			add(room);			
 			add(new EnemyRoom(GC.LEVEL_4));
 			
 			// add Goodies
@@ -60,38 +74,49 @@ package worlds
 				}
 			}
 			
-			var enemyHome:Rectangle = 
-				new Rectangle(room.xmlData.ghostsHome.rect.@x,
-							  room.xmlData.ghostsHome.rect.@y,
-							  room.xmlData.ghostsHome.rect.@w,
-							  room.xmlData.ghostsHome.rect.@h);
+			with (enemyHome) {
+				x = room.xmlData.ghostsHome.rect.@x;
+				y = room.xmlData.ghostsHome.rect.@y;
+				w = room.xmlData.ghostsHome.rect.@w;
+				h = room.xmlData.ghostsHome.rect.@h;
+			}
 			
-			var enemyStart:Rectangle = 
-				new Rectangle(room.xmlData.ghostsStart.rect.@x,
-							  room.xmlData.ghostsStart.rect.@y,
-							  room.xmlData.ghostsStart.rect.@w,
-							  room.xmlData.ghostsStart.rect.@h);
-							  
-			//add enemies
-			add(new Enemy(enemyHome, enemyStart, "yellow"));
-			add(new Enemy(enemyHome, enemyStart, "yellow"));
-			add(new Enemy(enemyHome, enemyStart, "black"));
-			add(new Enemy(enemyHome, enemyStart, "black"));
+			with (enemyStart) {
+				x = room.xmlData.ghostsStart.rect.@x;
+				y = room.xmlData.ghostsStart.rect.@y;
+				w = room.xmlData.ghostsStart.rect.@w;
+				h = room.xmlData.ghostsStart.rect.@h;
+			}
 			
-			addGraphic(scoreText);
-			addGraphic(lifeText);
+			addGraphic (scoreText);
+			addGraphic (lifeText);
+			
+			fillWithLife();
 		}
-		
-		
-		
-			
 		
 		override public function update ():void {
 			super.update();
 			scoreText.text = String(GV.points);
-			lifeText.text = String(GV.lives);
+			lifeText.text = String(GV.lifes);
 			
 		}
+		
+		private function fillWithLife():void {
+			add(new Player(room.playerStartX, room.playerStartY));
+			
+			//add enemies
+			setGhost("yellow");
+			setGhost("black");
+		}
+		
+		public function setGhost(color:String):void {
+			trace ("setGhost!");
+			var startX:int = Math.floor((FP.rand(enemyHome.width) + enemyHome.x) / 32) * 32;
+			var startY:int = Math.floor((FP.rand(enemyHome.height) + enemyHome.y) / 32) * 32;
+			add(new Enemy(startX, startY, enemyStart, color));
+		}
+		
+		
 		
 	}
 
