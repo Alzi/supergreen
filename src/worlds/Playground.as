@@ -1,5 +1,6 @@
 package worlds 
 {
+	import adobe.utils.CustomActions;
 	import entities.*;
 	import flash.display.InteractiveObject;
 	import flash.geom.Rectangle;
@@ -11,6 +12,7 @@ package worlds
 	import net.flashpunk.World;
 	import main.GV;
 	import net.flashpunk.utils.Ease;
+	import flash.geom.Point;
 	
 	import net.flashpunk.tweens.motion.LinearMotion;
 	
@@ -30,27 +32,29 @@ package worlds
 		//TODO implement a graphical life-counter
 		private var lifeText:Text = new Text("3", 560, 319, 150, 20);
 		
-		//the 'home-zome' where the villains unpatiently await their awakening
-		private var enemyHome:Rectangle = new Rectangle;
+		//TODO change to Point-Stack
 		private var enemyStart:Rectangle = new Rectangle;
 		
-		private var colorStack:Array;
+		//the 'home-zome' where the villains unpatiently await their awakening
+		private var startPointsStack:Array = new Array;
 		
 		public function Playground() 
 		{
-			
+			super();
 		}
-			
+		
+		
+		
 		/**
 		 * level-setup
 		 */
 		override public function begin():void {
 			
-			add (new Background);
+			add (new Background); //bg-picture
 			add(room);			
 			add(new EnemyRoom(GC.LEVEL_4));
 			
-			// add Goodies
+			//add Goodies to Room
 			var dataList:XMLList = new XMLList;
 			dataList = room.xmlData.goodies.tile;
 			var dataElement:XML;
@@ -74,12 +78,18 @@ package worlds
 				}
 			}
 			
-			with (enemyHome) {
-				x = room.xmlData.ghostsHome.rect.@x;
-				y = room.xmlData.ghostsHome.rect.@y;
-				w = room.xmlData.ghostsHome.rect.@w;
-				h = room.xmlData.ghostsHome.rect.@h;
+			// save all possible Enemy-homepoints in a stack and shuffle it
+			var collums:int = Math.floor(room.xmlData.ghostsHome.rect.@w / 32);
+			var rows:int = Math.floor(room.xmlData.ghostsHome.rect.@h / 32);
+			
+			for (var c:int = 0; c < collums; c++) {
+				for (var r:int = 0; r < rows; r++) {
+					var point:Point = new Point(int(room.xmlData.ghostsHome.rect.@x) + c*32, int(room.xmlData.ghostsHome.rect.@y) + r*32);
+					startPointsStack.push(point);
+				}
 			}
+			
+			FP.shuffle(startPointsStack);
 			
 			with (enemyStart) {
 				x = room.xmlData.ghostsStart.rect.@x;
@@ -91,33 +101,22 @@ package worlds
 			addGraphic (scoreText);
 			addGraphic (lifeText);
 			
-			fillWithLife();
+			add(new Player(room.playerStartX, room.playerStartY));
+			//add enemies (pick one of the shuffled homePoints (max 4 in this level...))
+			setEnemy(startPointsStack.shift(), "yellow" );
+			setEnemy(startPointsStack.shift(), "black" );
 		}
 		
 		override public function update ():void {
 			super.update();
 			scoreText.text = String(GV.points);
 			lifeText.text = String(GV.lifes);
-			
-		}
-		
-		private function fillWithLife():void {
-			add(new Player(room.playerStartX, room.playerStartY));
-			
-			//add enemies
-			setGhost("yellow");
-			setGhost("black");
-		}
-		
-		public function setGhost(color:String):void {
-			trace ("setGhost!");
-			var startX:int = Math.floor((FP.rand(enemyHome.width) + enemyHome.x) / 32) * 32;
-			var startY:int = Math.floor((FP.rand(enemyHome.height) + enemyHome.y) / 32) * 32;
-			add(new Enemy(startX, startY, enemyStart, color));
 		}
 		
 		
-		
+		// this needs to be called from outside
+		public function setEnemy(homePoint:Point, color:String):void {
+			add (new Enemy(homePoint, enemyStart, color));
+		}
 	}
-
 }

@@ -1,5 +1,6 @@
 package entities 
 {
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Image;
@@ -40,18 +41,16 @@ package entities
 		private var isAtHome:Boolean = true;
 		private var _startRect:Rectangle;
 		private var _color:String;
-		private var _startX:int;
-		private var _startY:int;
+		private var _homePoint:Point;
 		private var playground:Playground = Playground(FP.world);
 		
-		public function Enemy(startX:int, startY:int, startRect:Rectangle, color:String)
+		public function Enemy(homePoint:Point, startRect:Rectangle, color:String)
 		{
 			_startRect = startRect;
 			_color = color;
-			_startX = startX;
-			_startY = startY;
+			_homePoint = homePoint;
 			
-			super(_startX, _startY);
+			super(_homePoint.x, _homePoint.y);
 			
 			switch (_color) {
 				case "yellow":
@@ -161,7 +160,7 @@ package entities
 		
 		private function die():void {
 			GV.points += 100;
-			this.world.add(new EnemyGhost(x, y, _startX, _startY));	
+			this.world.add(new EnemyGhost(x,y,_homePoint,_color));	
 			this.world.remove(this);
 		}
 	}

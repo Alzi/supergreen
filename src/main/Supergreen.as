@@ -26,8 +26,7 @@ package main
 		
 		override public function init():void 
 		{
-			trace("I'm here!");
-			
+			//trace("I'm here!");
 			//super.init();
 		}
 		
