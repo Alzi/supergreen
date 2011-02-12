@@ -43,8 +43,9 @@ package entities
 		private var _startRect:Rectangle;
 		private var _color:String;
 		private var _homePoint:Point;
-		private var playground:Playground = Playground(FP.world);
 		
+		
+		//TODO startRect should be a Point as well
 		public function Enemy(homePoint:Point, startRect:Rectangle, color:String)
 		{
 			_startRect = startRect;
@@ -76,6 +77,7 @@ package entities
 			addTween(homeCounter, true);
 		}
 		
+		// make update more readable (more small functions)
 		override public function update():void {
 			
 			var player:Player = Player(collide("player", x, y));
@@ -86,7 +88,9 @@ package entities
 			if (isOnGrid()) {
 				
 				var directions:Array = getPossibleDirections();
+				
 				currentDirection = FP.choose(directions);
+				
 				
 				if (!collide("nuky", x, y) && !collide("goody",x,y) && !isAtHome) {
 					if (FP.rand(100) < GC.NUKY_RESPAWN_CHANCE) {
@@ -128,9 +132,10 @@ package entities
 			
 		}
 		
+		
+		//TODO animate the 'home-leaving'
 		private function goToStartPoint():void {
 			isAtHome = false;
-			
 			x = Math.floor((FP.rand(_startRect.width) + _startRect.x)/32)*32;
 			y = Math.floor((FP.rand(_startRect.height) + _startRect.y)/32)*32;
 			
@@ -144,6 +149,7 @@ package entities
 		}
 		
 		private function getPossibleDirections():Array {
+			
 			var directions:Array = new Array();
 			if (!collide("enemy-room", x + GC.ENEMY_SPEED, y) && currentDirection != "left") {
 				directions.push("right");

@@ -3,6 +3,7 @@ package main
 	import net.flashpunk.Engine;
 	import main.GC;
 	import net.flashpunk.FP;
+	import worlds.GameWon;
 	import worlds.Intro;
 	import worlds.Playground;
 	import flash.utils.*;
@@ -11,8 +12,9 @@ package main
 	 * ...
 	 * @author marc
 	 * 
-	 * TODO provide consistency of sprite/spritemap vars in entities
-	 * TODO check: startX und startY in every Entity -> int
+	 * TODO provide consistency of sprite\spritemap vars in entities
+	 * TODO check: startX und startY in every Entity -> point ?
+	 * TODO implement things: Player-Follow, 'Energy-Mix', Fleeing(?)
 	 * 
 	 */
 	public class Supergreen extends Engine

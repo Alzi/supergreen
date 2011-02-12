@@ -10,16 +10,16 @@ package entities
 	import net.flashpunk.utils.Key;
 	import main.GC;
 	import main.GV;
+	import main.GFX;
 	/**
 	 * ...
 	 * @author marc
+	 * TODO rename moods
+	 * TODO clean up code
 	 */
 	public class Player extends Entity 
 	{
-		[Embed(source = '../assets/gfx/player.png')]
-		private const PLAYER:Class;
-		
-		private var player_sprite:Spritemap = new Spritemap(PLAYER, 32, 32);
+		private var player_sprite:Spritemap = new Spritemap(GFX.PLAYER, 32, 32);
 		private var currentVelX:int = 0;  	//Default-X-Velocity
 		private var currentVelY:int = 0;	//Default-X-Velocity
 		private var nextVelX:int = 0;		
@@ -30,6 +30,7 @@ package entities
 		private var respawnTimer:Alarm = new Alarm(GC.PLAYER_RESPAWN_TIME, respawn);
 		private var invulnerableTimer:Alarm = new Alarm(GC.PLAYER_INVULNERABLE_TIME, goNormal);
 		private var isDead:Boolean = false;
+		private var speedUpgrade:Number = 0;
 		
 		private var _startX:uint;
 		private var _startY:uint;
@@ -49,17 +50,17 @@ package entities
 			layer = GC.LAYER_PLAYER;
 			type = "player";
 			
-			player_sprite.add("left-afraid", [4, 5, 6, 7, 5], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("right-afraid", [0,1,2,3,1], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("up-afraid", [8,9,10,11,9], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("down-afraid", [12, 13, 14, 15, 13], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("left-afraid", [0,0,1,2,3,4,5,2], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("right-afraid", [6,6,7,8,9,10,11,8], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("down-afraid", [12,12,13,14,15,16,17,14], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("up-afraid", [18,18,19,20,21,22,23,20], GC.PLAYER_SPRITE_FR, true);
 			
 			player_sprite.add("left-angry", [20, 21, 22, 23, 21], GC.PLAYER_SPRITE_FR, true);
 			player_sprite.add("right-angry", [16,17,18,19,17], GC.PLAYER_SPRITE_FR, true);
 			player_sprite.add("up-angry", [24, 25, 26, 27, 25], GC.PLAYER_SPRITE_FR, true);
 			player_sprite.add("down-angry", [28, 29, 30, 31, 29], GC.PLAYER_SPRITE_FR, true);
 			
-			player_sprite.add("die", [32, 33, 34, 35, 36, 37, 38, 39,40], GC.PLAYER_SPRITE_FR, false);
+			player_sprite.add("die", [24,24,24,24,24,25, 26, 27, 28,28,28,28,28, 29, 30, 31, 32, 33, 33], GC.PLAYER_SPRITE_FR, false);
 						
 			graphic = player_sprite;
 						
@@ -83,31 +84,32 @@ package entities
 			
 			//check Input
 			if (Input.pressed("left")) {
-				nextVelX = -GC.PLAYER_SPEED;
+				nextVelX = -GC.PLAYER_SPEED-speedUpgrade;
 				nextVelY = 0;
 				nextOrientation = "left"
 				//player_sprite.play("left");
 			}
 			if (Input.pressed("right")) {
-				nextVelX = GC.PLAYER_SPEED;
+				nextVelX = GC.PLAYER_SPEED+speedUpgrade;
 				nextVelY = 0;
 				nextOrientation = "right";
 				//player_sprite.play("right");
 			}
 			if (Input.pressed("up")) {
-				nextVelY = -GC.PLAYER_SPEED;
+				nextVelY = -GC.PLAYER_SPEED-speedUpgrade;
 				nextVelX = 0;
 				nextOrientation = "up";
 				//player_sprite.play("up");
 			}
 			if (Input.pressed("down")) {
-				nextVelY = GC.PLAYER_SPEED;
+				nextVelY = GC.PLAYER_SPEED+speedUpgrade;
 				nextVelX = 0;
 				nextOrientation = "down";
 				//player_sprite.play("down");
 			}
 			
 			if (!isDead) {
+				
 				checkCollision();
 				player_sprite.play(currentOrientation+"-"+mood);
 				
@@ -127,11 +129,12 @@ package entities
 			y = _startY;
 			
 			mood = "angry";
-			player_sprite.play("right-angry");
-			currentOrientation = "right";
+			//player_sprite.play("right-angry");
+			//currentOrientation = "right";
 			isDead = false;
 			collidable = true;
 			SoundManager.i.playSound("sh_end", 0, 0, goNormal);
+			invulnerableTimer.start();
 		}
 		
 		private function checkCollision():void {
@@ -170,7 +173,8 @@ package entities
 		public function goSuperhero():void {
 			mood = "angry";
 			superheroTimer.start();
-			SoundManager.i.loopSound(SoundManager.i.superheroLoop);
+			SoundManager.i.loopSound(SoundManager.i.superheroLoop,0.3);
+			speedUpgrade = 0;
 		}
 		
 		private function goNormal():void {

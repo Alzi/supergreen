@@ -3,6 +3,7 @@ package main
 	/**
 	 * ...
 	 * @author marc
+	 * TODO get rid off 'GFX_'-prefixes
 	 */
 	public class GFX 
 	{
@@ -12,8 +13,9 @@ package main
 		[Embed(source = '../assets/gfx/level-tiles.png')]
 		public static const GFX_LEVELTILES:Class;
 		
+		//TODO rename Gfx-File
 		[Embed(source = '../assets/gfx/player.png')]
-		public static const GFX_PLAYER:Class;
+		public static const PLAYER:Class;
 		
 		[Embed(source = '../assets/gfx/ghost-tiles.png')]
 		public static const GFX_ENEMIES:Class;
