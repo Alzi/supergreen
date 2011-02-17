@@ -1,5 +1,6 @@
 package worlds 
 {
+	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Text;
 	import net.flashpunk.tweens.misc.VarTween;
 	import net.flashpunk.World;
@@ -14,7 +15,6 @@ package worlds
 	 * @author marc
 	 */
 	
-	 
 	public class Intro extends World 
 	{
 		
@@ -23,32 +23,30 @@ package worlds
 		private var hasPlayedSound:Boolean = false;
 		private var fadeIn:VarTween = new VarTween();
 		
-		
 		public function Intro() 
 		{
 			super();
 		}
 		
 		override public function begin():void {
+			FP.screen.color = 0x000000;
+			addTween(fadeIn, true);
 			addGraphic(welcomeText);
 			clickText.alpha = 0;
-			fadeIn.tween(clickText, "alpha", 1, 15, Ease.quartOut);
-			SoundManager.i.playSound("player_start",0,0,onSoundPlayed);
+			addGraphic(clickText);
+			SoundManager.i.playSound("player_start",0.8,0,onSoundPlayed);
 		}
 			
 		override public function update():void {
+			super.update();
 			if (Input.check(Key.ANY) && hasPlayedSound) {
 				FP.world = new Playground();
 			}
 		}
-				
+		
 		private function onSoundPlayed():void {
-			addTween(fadeIn, true);
-			addGraphic(clickText);
+			fadeIn.tween(clickText, "alpha", 1, 15, Ease.quartOut);
 			hasPlayedSound = true;
 		}
-	
-		
 	}
-
 }

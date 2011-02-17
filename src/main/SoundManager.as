@@ -1,6 +1,5 @@
 package main
 {
-	import flash.filters.ShaderFilter;
 	import net.flashpunk.Sfx;
 
 	public final class SoundManager
@@ -71,9 +70,9 @@ package main
 			s.play(GC.SOUND_VOLUME-pad, pan);
 		}
 		
-		public function loopSound(sound:Sfx, vol:Number=1):void
+		public function loopSound(sound:Sfx, vol:Number=1, delay:int = 0):void
 		{
-			sound.loop(vol);
+			sound.loop(vol,0, 51);
 		}
 		
 		public function stopLoop(sound:Sfx):void

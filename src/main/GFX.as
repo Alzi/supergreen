@@ -17,8 +17,17 @@ package main
 		[Embed(source = '../assets/gfx/player.png')]
 		public static const PLAYER:Class;
 		
-		[Embed(source = '../assets/gfx/ghost-tiles.png')]
-		public static const GFX_ENEMIES:Class;
+		[Embed(source = '../assets/gfx/player-dies.png')]
+		public static const PLAYER_DIES:Class;
+		
+		[Embed(source = '../assets/gfx/blacky.png')]
+		public static const BLACKY:Class;
+		
+		[Embed(source = '../assets/gfx/yelly.png')]
+		public static const YELLY:Class;
+		
+		[Embed(source = '../assets/gfx/afraid-ghost.png')]
+		public static const AFRAID_GHOST:Class;
 		
 		[Embed(source = '../assets/gfx/background.jpg')]
 		public static const GFX_BACKGROUND:Class;
@@ -31,6 +40,9 @@ package main
 		
 		[Embed(source = '../assets/gfx/kill-points.png')]
 		public static const GFX_KILL_POINTS:Class;
+		
+		[Embed(source = '../assets/gfx/energy-mix.png')]
+		public static const ENERGY_MIX:Class;
 		
 	}
 

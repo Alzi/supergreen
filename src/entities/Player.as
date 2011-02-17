@@ -1,66 +1,80 @@
 package entities 
 {
+	import flash.net.NetStreamPlayTransitions;
 	import main.SoundManager;
 	import net.flashpunk.Entity;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.tweens.misc.Alarm;
+	import net.flashpunk.tweens.misc.VarTween;
 	import net.flashpunk.utils.Input;
 	import net.flashpunk.utils.Key;
 	import main.GC;
 	import main.GV;
 	import main.GFX;
+	import net.flashpunk.World;
+	import worlds.Playground;
+	import net.flashpunk.utils.Ease
 	/**
 	 * ...
 	 * @author marc
-	 * TODO rename moods
 	 * TODO clean up code
 	 */
 	public class Player extends Entity 
 	{
 		private var player_sprite:Spritemap = new Spritemap(GFX.PLAYER, 32, 32);
+		private var playerDies_sprite:Spritemap = new Spritemap(GFX.PLAYER_DIES, 32, 32, fadePlayerOut);
 		private var currentVelX:int = 0;  	//Default-X-Velocity
 		private var currentVelY:int = 0;	//Default-X-Velocity
 		private var nextVelX:int = 0;		
 		private var nextVelY:int = 0;
-		private var currentOrientation:String = "right";
+		private var currentOrientation:String = "left";
 		private var nextOrientation:String;
+		
+		//Tweens
 		private var superheroTimer:Alarm = new Alarm(GC.PLAYER_POWERUP_TIME, stopLoop);
 		private var respawnTimer:Alarm = new Alarm(GC.PLAYER_RESPAWN_TIME, respawn);
 		private var invulnerableTimer:Alarm = new Alarm(GC.PLAYER_INVULNERABLE_TIME, goNormal);
+		private var fadeOut:VarTween = new VarTween();
+		
 		private var isDead:Boolean = false;
 		private var speedUpgrade:Number = 0;
 		
+		//Energy-Mix-Flags
+		private var hasEatenGoodyWater:Boolean = false;
+		private var hasEatenGoodySun:Boolean = false;
+		private var hasEatenGoodyWind:Boolean = false;
+				
 		private var _startX:uint;
 		private var _startY:uint;
 		
-		public var mood:String = "afraid";
+		private var _pg:Playground;
 		
-		public function Player(startX:int, startY:int):void
+		public var mode:String = "normal";
+		
+		public function Player(startX:int, startY:int, pg:World):void
 		{
 			_startX = startX;
 			_startY = startY;
 			super (_startX, _startY);
-			
-			addTween(superheroTimer);
-			addTween(respawnTimer);
-			addTween(invulnerableTimer);
+					
+			_pg = Playground(pg);
 			
 			layer = GC.LAYER_PLAYER;
 			type = "player";
 			
-			player_sprite.add("left-afraid", [0,0,1,2,3,4,5,2], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("right-afraid", [6,6,7,8,9,10,11,8], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("down-afraid", [12,12,13,14,15,16,17,14], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("up-afraid", [18,18,19,20,21,22,23,20], GC.PLAYER_SPRITE_FR, true);
+			addTween(superheroTimer);
+			addTween(respawnTimer);
+			addTween(invulnerableTimer);
+			addTween(fadeOut);
+						
+			player_sprite.add("left", [0,0,1,2,3,4,5,2], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("right", [6,6,7,8,9,10,11,8], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("down", [12,12,13,14,15,16,17,14], GC.PLAYER_SPRITE_FR, true);
+			player_sprite.add("up", [18,18,19,20,21,22,23,20], GC.PLAYER_SPRITE_FR, true);
 			
-			player_sprite.add("left-angry", [20, 21, 22, 23, 21], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("right-angry", [16,17,18,19,17], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("up-angry", [24, 25, 26, 27, 25], GC.PLAYER_SPRITE_FR, true);
-			player_sprite.add("down-angry", [28, 29, 30, 31, 29], GC.PLAYER_SPRITE_FR, true);
-			
-			player_sprite.add("die", [24,24,24,24,24,25, 26, 27, 28,28,28,28,28, 29, 30, 31, 32, 33, 33], GC.PLAYER_SPRITE_FR, false);
+			playerDies_sprite.add("die", [0,0,0,1,1,1,2,3,4,5,6,6,6,6,7,7,7,8,8,9], GC.PLAYER_SPRITE_FR, false);
 						
 			graphic = player_sprite;
 						
@@ -71,38 +85,44 @@ package entities
 			Input.define("down", Key.DOWN, Key.S);
 			
 			//define Hitbox
-			setHitbox(32, 32, 0, 0);
+			setHitbox(32,32);
+			
+			SoundManager.i.playSound("munch", 1);
 		}
 		
 		override public function update():void 
 		{
 			super.update();
 			
-			if (collide("enemy", x, y) && mood=="afraid") {
+			GV.playerGridX = Math.round(x / 32) * 32;
+			GV.playerGridY = Math.round(y / 32) * 32;
+			var e:Enemy = Enemy(collide("enemy", x, y));
+			
+			if (e && !e.isAfraid) {
 				die();
 			}
 			
 			//check Input
 			if (Input.pressed("left")) {
-				nextVelX = -GC.PLAYER_SPEED-speedUpgrade;
+				nextVelX = -GC.PLAYER_SPEED;
 				nextVelY = 0;
 				nextOrientation = "left"
 				//player_sprite.play("left");
 			}
 			if (Input.pressed("right")) {
-				nextVelX = GC.PLAYER_SPEED+speedUpgrade;
+				nextVelX = GC.PLAYER_SPEED;
 				nextVelY = 0;
 				nextOrientation = "right";
 				//player_sprite.play("right");
 			}
 			if (Input.pressed("up")) {
-				nextVelY = -GC.PLAYER_SPEED-speedUpgrade;
+				nextVelY = -GC.PLAYER_SPEED;
 				nextVelX = 0;
 				nextOrientation = "up";
 				//player_sprite.play("up");
 			}
 			if (Input.pressed("down")) {
-				nextVelY = GC.PLAYER_SPEED+speedUpgrade;
+				nextVelY = GC.PLAYER_SPEED;
 				nextVelX = 0;
 				nextOrientation = "down";
 				//player_sprite.play("down");
@@ -111,7 +131,13 @@ package entities
 			if (!isDead) {
 				
 				checkCollision();
-				player_sprite.play(currentOrientation+"-"+mood);
+				player_sprite.play(currentOrientation);
+				
+				GV.playerVectorX = FP.sign(currentVelX);
+				GV.playerVectorY = FP.sign(currentVelY);
+				
+				currentOrientation = nextOrientation;
+				
 				
 				x += currentVelX;
 				y += currentVelY;
@@ -127,14 +153,20 @@ package entities
 		private function respawn():void {
 			x = _startX;
 			y = _startY;
+			graphic = player_sprite;
+			player_sprite.play(currentOrientation);
 			
-			mood = "angry";
-			//player_sprite.play("right-angry");
-			//currentOrientation = "right";
+			fadeOut.active = false;
+			playerDies_sprite.alpha = 1;
+			
+			
+			mode = "super";
 			isDead = false;
 			collidable = true;
 			SoundManager.i.playSound("sh_end", 0, 0, goNormal);
 			invulnerableTimer.start();
+			_pg.setEnemies();
+
 		}
 		
 		private function checkCollision():void {
@@ -142,16 +174,15 @@ package entities
 			if (collide("room", x + currentVelX, y + currentVelY)) {
 				currentVelX = 0;
 				currentVelY = 0;
-				x = Math.floor(x / 32) * 32 +currentVelX;
-				y = Math.floor(y / 32) * 32 +currentVelY;
-				
+				//x = Math.round(x / 32) * 32 +currentVelX;
+				//y = Math.round(y / 32) * 32 +currentVelY;
 			} 
 			else 
 			{
 				if (collide("room", x + nextVelX, y + nextVelY) == null) {
 					currentVelX = nextVelX;
 					currentVelY = nextVelY;
-					currentOrientation = nextOrientation;
+					
 				}
 				var goody:Nuky = Nuky(collide("nuky", x, y));
 				if (goody){
@@ -161,25 +192,34 @@ package entities
 		}
 		
 		private function die():void {
+			
 			SoundManager.i.playSound("hero_killed");
-			mood = "afraid";
-			isDead = true;
-			player_sprite.play("die");
+			_pg.shakeScreen();
 			GV.lifes -= 1;
+			_pg.lifeCounter.looseLife();
+			_pg.checkIfGameLost();
+			mode = "normal";
+			isDead = true;
+			graphic = playerDies_sprite;
+			playerDies_sprite.play("die",true);
+			//var lifecounter:LiveCounter = new LiveCounter(0,0);
+			//world.getClass(LiveCounter, lifecounter);
+			//lifecounter.oneLifeLost();
 			respawnTimer.start();
 			collidable = false;
 		}
 		
-		public function goSuperhero():void {
-			mood = "angry";
-			superheroTimer.start();
-			SoundManager.i.loopSound(SoundManager.i.superheroLoop,0.3);
-			speedUpgrade = 0;
+		
+		
+		private function fadePlayerOut():void {
+			fadeOut.tween(playerDies_sprite, "alpha", 0, 60);
 		}
 		
 		private function goNormal():void {
-			if (superheroTimer.remaining == 0) {
-				mood = "afraid";
+			if (! superheroTimer.active ) {
+				mode = "normal";
+				GV.playersMode = "normal";
+				_pg.setEnemiesNotAfraid();
 			}
 		}
 		
@@ -187,5 +227,32 @@ package entities
 			SoundManager.i.stopLoop(SoundManager.i.superheroLoop);
 			SoundManager.i.playSound("sh_end",0,0,goNormal);
 		}
+		
+		private function goSuperhero():void {
+			mode = "super";
+			GV.playersMode = "super";
+			superheroTimer.start();
+			SoundManager.i.loopSound(SoundManager.i.superheroLoop,0.3);
+			speedUpgrade = 0;
+			_pg.setEnemiesAfraid();
+		}
+		
+		public function goodyEaten(goodyType:String):void {
+			
+			if (mode == "normal") {
+				_pg.energyMixDisplay[goodyType.toLowerCase()].visible = true;
+				this["hasEatenGoody" + goodyType] = true;
+			}
+			
+			if (hasEatenGoodySun && hasEatenGoodyWater && hasEatenGoodyWind) {
+				hasEatenGoodySun = hasEatenGoodyWater = hasEatenGoodyWind = false;
+				_pg.energyMixDisplay.goSuperhero();
+				goSuperhero();
+			}
+		}
+		
+		
+		
+		
 	}
 }
