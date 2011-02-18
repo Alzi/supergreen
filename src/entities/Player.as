@@ -232,7 +232,9 @@ package entities
 			mode = "super";
 			GV.playersMode = "super";
 			superheroTimer.start();
-			SoundManager.i.loopSound(SoundManager.i.superheroLoop,0.3);
+			SoundManager.i.playSound("go_superhero",0, 0);
+			SoundManager.i.loopSound(SoundManager.i.superheroLoop, 0.8, 54);
+			
 			speedUpgrade = 0;
 			_pg.setEnemiesAfraid();
 		}
@@ -241,8 +243,19 @@ package entities
 			
 			if (mode == "normal") {
 				_pg.energyMixDisplay[goodyType.toLowerCase()].visible = true;
-				this["hasEatenGoody" + goodyType] = true;
+				if (! this["hasEatenGoody" + goodyType]) {
+					this["hasEatenGoody" + goodyType] = true;
+					SoundManager.i.playSound("goody_" + goodyType);
+				}
+				else {
+					SoundManager.i.playSound("goody_not_count",0.3);
+				}
 			}
+			
+			else {
+				SoundManager.i.playSound("goody_not_count",0.2);
+			}
+			
 			
 			if (hasEatenGoodySun && hasEatenGoodyWater && hasEatenGoodyWind) {
 				hasEatenGoodySun = hasEatenGoodyWater = hasEatenGoodyWind = false;

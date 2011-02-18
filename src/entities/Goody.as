@@ -50,15 +50,17 @@ package entities
 		override public function update():void {
 			
 			var hero:Player = Player(collide("player", x, y));
+			
+			
 			if (hero && isActive) {
 				isActive = false;
 				spriteMap.play("inactive");
 				inactiveCounter.start();
-				
 				hero.goodyEaten(_goodyType);
-				SoundManager.i.playSound("goody_" + _goodyType);
+				
+				
+				
 			}
-			//super.update();
 			
 		}
 		

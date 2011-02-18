@@ -19,22 +19,11 @@ package entities
 	import main.SoundManager;
 	import net.flashpunk.utils.Ease;
 	
-	
 	/**
 	 * 
-	 * The little ghost should be able to do some things:
-	 * moving:
-	 * random movement, decide if change of direction should occur at crossroads, checking collision ahead
-	 * 
-	 * //TODO fleeing:
-	 * if the Hero eats a goody and consequently has superpowers with an appetite for ghosts,
-	 * they will try to put as much distance between them and the hungry guy, as they can.
-	 * 
-	 * spawn new Nukies:
-	 * the aim of the game is to eat all Nukies, so the villains obviously have to play their role in preventing that.
-	 * check collision with 'nuky', if not spawn one on grid (~ 20%?)
-	 * 
 	 * @author marc
+	 * 
+	 * 
 	 */
 	public class Enemy extends Entity 
 	{
@@ -73,10 +62,6 @@ package entities
 		private var switchedToAfraid:Boolean = false;
 		private var isAtHome:Boolean = true;
 		
-	
-		
-		
-		//TODO startRect should be a Point as well
 		public function Enemy(homePoints:Vector.<Point>, startPoint:Point, nickname:String)
 		{
 			_homePoints = homePoints;
@@ -89,8 +74,11 @@ package entities
 			
 			addTween(motion, false);
 			addTween(homeCounter, true);
+			
+			//TODO since they do only occur after another they should be realized by one Tween ? 
 			addTween(fadeOut, false);
 			addTween(fadeIn, false);
+			
 			addTween(modeTimer, true);
 			addTween(levelTimer, false);
 			addTween(startMotion, false);
@@ -109,6 +97,7 @@ package entities
 			
 			graphic = sprite;
 			type = "enemy";
+			
 			setHitbox(8, 8, -14,-14);
 			layer = GC.LAYER_ENEMIES;
 			
@@ -171,7 +160,6 @@ package entities
 		}
 		
 		private function onLevelTimeUp():void {
-			trace ("Level-Time-Up!");
 			modeTimer.active = false;
 			mode = "follow";
 		}

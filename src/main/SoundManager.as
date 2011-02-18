@@ -40,6 +40,9 @@ package main
 		[Embed(source = '../assets/audio/supergreen-start.mp3')]
 		public const PLAYER_START:Class;
 		
+		[Embed(source = '../assets/audio/go-superhero.mp3')] public const GO_SUPERHERO:Class;
+		[Embed(source = '../assets/audio/goody-notCount.mp3')] public const GOODY_NOT_COUNT:Class;
+		
 		public var superheroLoop:Sfx = new Sfx(SUPERHERO);
 		
 

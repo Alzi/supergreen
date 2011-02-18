@@ -2,3 +2,4 @@ obj/*
 bin/*
 src/assets/gfx/*.psd
 src/assets/gfx/old/*
+src/assets/audio/old/*

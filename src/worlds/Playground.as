@@ -164,11 +164,10 @@ package worlds
 			}
 			enemyJump.tween(enemySprites, "y", - 10, 20, Ease.circOut);
 		}
-		
 				
 		public function checkIfGameLost():void {
 			//TODO wait and make some wining / loosing - animation inside the level-screen 
-			if (GV.lifes <= 0) {
+			if (GV.lifes <= 1) {
 				looseGame();
 				//FP.world = new GameLost();
 			}
